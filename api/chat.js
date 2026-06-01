@@ -15,10 +15,12 @@ export default async function handler(req, res) {
 
   try {
     const { contents, systemInstruction } = req.body;
+
+    const systemText = systemInstruction.parts ? systemInstruction.parts[0].text : systemInstruction;
     
     // Преобразуем формат Gemini в формат OpenAI/Groq
     const messages = [
-      { role: "system", content: systemInstruction },
+      { role: "system", content: systemText },
       ...contents.map(item => ({
         role: item.role === 'user' ? 'user' : 'assistant',
         content: item.parts[0].text

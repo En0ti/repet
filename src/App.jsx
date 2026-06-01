@@ -1,3 +1,5 @@
+import { getSystemPrompt } from './promptManager';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, 
@@ -339,15 +341,7 @@ export default function App() {
     setIsLoading(true);
 
     // Подготовка системного промпта
-    const systemPrompt = `Ты — профессиональный репетитор и ИИ-ассистент по подготовке к ЕГЭ по информатике в России.
-Твоя цель — помогать ученикам осваивать материал, терпеливо объяснять алгоритмы, помогать с написанием чистого, понятного и эффективного кода на Python.
-Правила общения:
-1. Отвечай дружелюбно, профессионально, на русском языке.
-2. Используй LaTeX-разметку для формул (например, $A \\land B$ или $$x \\in A$$), чтобы формулы красиво рендерились.
-3. Код оборачивай в блоки с указанием языка (например, \`\`\`python ... \`\`\`).
-4. Старайся не просто давать готовый код решения, а объяснять логику шагов, чтобы ученик понял концепцию.
-5. Отсылайся к спецификациям ЕГЭ по информатике актуального года (структура заданий, шкала баллов, КЕГЭ особенности).
-Текущая выбранная учеником тема: ${activeTopic.title}. При необходимости строй контекст вокруг неё.`;
+    const systemPrompt = getSystemPrompt(activeTab); // activeTab — это id темы (например, 'logic')ная учеником тема: ${activeTopic.title}. При необходимости строй контекст вокруг неё.`;
 
     try {
       // Подготовка истории сообщений для Gemini API
@@ -370,8 +364,13 @@ export default function App() {
         }
       };
 
-      const data = await fetchчy(payload);
-      const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Извини, не удалось получить ответ от системы ИИ.";
+      const data = await fetchGeminiWithRetry(payload);
+      const aiText = 
+        // Если ответ от Gemini (структура candidates)
+        data.candidates?.[0]?.content?.parts?.[0]?.text || 
+        // Если ответ от Groq / OpenAI (структура choices)
+        data.choices?.[0]?.message?.content || 
+        "Извини, не удалось получить корректный ответ от системы.";
 
       setMessages(prev => [...prev, {
         role: "assistant",
