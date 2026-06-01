@@ -1,41 +1,54 @@
-// Serverless функция для безопасной работы с Gemini API
 export default async function handler(req, res) {
   // Разрешаем только POST запросы
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Метод не разрешен. Используйте POST.' });
   }
 
-  // Секретный ключ берется из переменных окружения на сервере Vercel
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Конфигурация сервера не завершена: отсутствует API ключ.' });
+    console.error('ОШИБКА СЕРВЕРА: Переменная окружения GEMINI_API_KEY не найдена!');
+    return res.status(500).json({ 
+      error: 'Конфигурация сервера не завершена. Проверьте, добавлен ли GEMINI_API_KEY в настройках Vercel.' 
+    });
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+  // Обновляем модель до актуальной и поддерживаемой gemini-2.5-flash
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
   try {
+    const { contents, systemInstruction } = req.body;
+
+    // Логируем входящий запрос для отладки в консоли Vercel
+    console.log('Отправка запроса к Gemini API...');
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        contents: req.body.contents,
-        systemInstruction: req.body.systemInstruction
+        contents,
+        systemInstruction
       })
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-      const errorText = await response.text();
-      return res.status(response.status).json({ error: `Gemini API Error: ${errorText}` });
+      console.error('Gemini API вернул ошибку:', JSON.stringify(responseData));
+      return res.status(response.status).json({ 
+        error: `Ошибка Gemini API: ${responseData.error?.message || 'Неизвестная ошибка'}` 
+      });
     }
 
-    const data = await response.json();
-    return res.status(200).json(data);
+    console.log('Успешный ответ от Gemini API получен!');
+    return res.status(200).json(responseData);
 
   } catch (error) {
-    console.error('API Error:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка сервера при запросе к ИИ.' });
+    console.error('Критическая ошибка на сервере:', error);
+    return res.status(500).json({ 
+      error: `Внутренняя ошибка сервера: ${error.message}` 
+    });
   }
 }
