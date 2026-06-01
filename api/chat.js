@@ -1,7 +1,16 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const apiKey = process.env.GROQ_API_KEY; // Важно: в Vercel создайте переменную с этим именем!
+  // Теперь проверяем правильную переменную для Groq
+  const apiKey = process.env.GROQ_API_KEY;
+  
+  if (!apiKey) {
+    console.error('ОШИБКА СЕРВЕРА: Переменная окружения GROQ_API_KEY не найдена!');
+    return res.status(500).json({ 
+      error: 'Конфигурация сервера не завершена. Проверьте, добавлен ли GROQ_API_KEY в настройках Vercel.' 
+    });
+  }
+
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 
   try {
