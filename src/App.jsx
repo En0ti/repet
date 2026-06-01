@@ -352,7 +352,7 @@ export default function App() {
     try {
       // Подготовка истории сообщений для Gemini API
       // Ограничим историю последними 10 сообщениями, чтобы уложиться в лимиты
-      const recentMessages = messages.slice(-10).map(msg => ({
+      const recentMessages = messages.slice(-4).map(msg => ({
         role: msg.role === "assistant" ? "model" : "user",
         parts: [{ text: msg.text }]
       }));
@@ -370,7 +370,7 @@ export default function App() {
         }
       };
 
-      const data = await fetchGeminiWithRetry(payload);
+      const data = await fetchчy(payload);
       const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Извини, не удалось получить ответ от системы ИИ.";
 
       setMessages(prev => [...prev, {
