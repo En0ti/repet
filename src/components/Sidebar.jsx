@@ -1,6 +1,6 @@
 import React from 'react';
 import { BookOpen, Sparkles } from 'lucide-react';
-import { COURSE_DATA } from '../data/courseData';
+import { COURSE_DATA } from '../data/topics';
 
 export default function Sidebar({ activeTab, setActiveTab, mobileMenuOpen, setMobileMenuOpen }) {
   return (

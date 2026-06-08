@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { COURSE_DATA } from './data/courseData';
+import { COURSE_DATA } from './data/topics';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import TopicView from './components/TopicView';
 import ChatWidget from './ChatWidget';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("logic");
+  const [activeTab, setActiveTab] = useState(COURSE_DATA[0].id);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [quizChecked, setQuizChecked] = useState(false);
