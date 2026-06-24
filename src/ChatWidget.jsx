@@ -3,7 +3,7 @@ import { MessageSquare, X, Send, Sparkles, RefreshCw } from 'lucide-react';
 import { getSystemPrompt } from './promptManager';
 import { renderMessageContent } from './utils/renderHelpers';
 
-export default function ChatWidget({ activeTopicId, activeTopicTitle, externalMessage, onExternalMessageConsumed }) {
+export default function ChatWidget({ activeTopic, externalMessage, onExternalMessageConsumed }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([{
     role: "assistant",
@@ -41,7 +41,7 @@ export default function ChatWidget({ activeTopicId, activeTopicTitle, externalMe
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
-    const systemPrompt = getSystemPrompt(activeTopicId);
+    const systemPrompt = getSystemPrompt(activeTopic);
 
     try {
       const recentMessages = messages.slice(-4).map(msg => ({
@@ -120,7 +120,7 @@ export default function ChatWidget({ activeTopicId, activeTopicTitle, externalMe
                 <span className="font-bold text-sm text-white flex items-center gap-1.5">
                   <Sparkles className="text-emerald-400 w-4 h-4" /> Тьютор по информатике
                 </span>
-                <p className="text-[11px] text-slate-400">Онлайн • тема: {activeTopicTitle || '—'}</p>
+                <p className="text-[11px] text-slate-400">Онлайн • тема: {activeTopic?.title || '—'}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
