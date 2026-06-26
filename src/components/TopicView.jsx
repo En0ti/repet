@@ -50,7 +50,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
     answers[i] === q.correct && checked[i] ? acc + 1 : acc, 0) ?? 0;
 
   return (
-    <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
+    <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
 
       {/* Заголовок */}
       <div className="space-y-2">

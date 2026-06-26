@@ -216,7 +216,7 @@ export const renderTheory = (theoryText) => {
               <FileImage className="w-4 h-4 text-indigo-400" />
               <span className="uppercase tracking-wider font-semibold">Иллюстрация</span>
             </div>
-            <div className="flex justify-center" dangerouslySetInnerHTML={{ __html: code }} />
+            <div className="flex justify-center w-full overflow-hidden" dangerouslySetInnerHTML={{ __html: code }} />
           </figure>
         );
       }

@@ -23,7 +23,7 @@ export default function App() {
         onWarmup={() => sendToChat("Привет! Дай мне сложную задачу из КЕГЭ по информатике для разминки.")}
       />
 
-      <div className="flex-1 flex flex-col md:flex-row relative overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row relative overflow-hidden min-w-0">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
