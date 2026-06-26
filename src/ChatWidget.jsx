@@ -91,7 +91,7 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
   }]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50">
       {/* Кнопка открытия */}
       {!isOpen && (
         <button
@@ -105,7 +105,7 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
 
       {/* Окно чата */}
       {isOpen && (
-        <div className="w-[380px] h-[560px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="w-[calc(100vw-1.5rem)] sm:w-[380px] h-[80vh] sm:h-[560px] max-h-[560px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
 
           {/* Хедер */}
           <div className="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-950">

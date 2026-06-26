@@ -19,7 +19,7 @@ export default function Header({ mobileMenuOpen, setMobileMenuOpen, onWarmup }) 
           <div>
             <h1 className="font-bold text-lg leading-tight flex items-center gap-1.5 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
               ЕГЭ Информатика{' '}
-              <span className="text-xs bg-emerald-500/20 text-emerald-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="hidden sm:inline text-xs bg-emerald-500/20 text-emerald-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">
                 ИИ-Тьютор
               </span>
             </h1>
@@ -37,7 +37,8 @@ export default function Header({ mobileMenuOpen, setMobileMenuOpen, onWarmup }) 
           onClick={onWarmup}
           className="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition-all text-white font-semibold text-xs px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
         >
-          <BrainCircuit className="w-4 h-4" /> Разминка
+          <BrainCircuit className="w-4 h-4" />
+          <span className="hidden sm:inline">Разминка</span>
         </button>
       </div>
     </header>
