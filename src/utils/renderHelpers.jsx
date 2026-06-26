@@ -46,6 +46,34 @@ export const renderInline = (text, baseKey = 'i') => {
         continue;
       }
     }
+    // [text](url) — ссылка
+    if (text[i] === '[') {
+      const closeBracket = text.indexOf(']', i + 1);
+      if (closeBracket !== -1 && text[closeBracket + 1] === '(') {
+        const closeParen = text.indexOf(')', closeBracket + 2);
+        if (closeParen !== -1) {
+          flushPlain(i);
+          const linkText = text.slice(i + 1, closeBracket);
+          const linkHref = text.slice(closeBracket + 2, closeParen);
+          const isFile = /\.(xls|xlsx|csv|zip|pdf|docx)$/i.test(linkHref);
+          out.push(
+            <a
+              key={`${baseKey}-${nodeIdx++}`}
+              href={linkHref}
+              download={isFile ? true : undefined}
+              target={isFile ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+            >
+              {linkText}
+            </a>
+          );
+          i = closeParen + 1;
+          plainStart = i;
+          continue;
+        }
+      }
+    }
     // $math$ (минимальная поддержка — рендерим курсивом)
     if (text[i] === '$') {
       const end = text.indexOf('$', i + 1);
@@ -146,7 +174,12 @@ export const parseMarkdown = (text) => {
         </figure>
       );
     } else if (trimmed === '') {
-      flushList();
+      // Не сбрасываем список если следующая непустая строка — тоже элемент списка
+      const nextNonEmpty = lines.slice(idx + 1).find(l => l.trim() !== '');
+      const nextIsList = nextNonEmpty && (
+        /^\s*[-*]\s/.test(nextNonEmpty) || /^\s*\d+\.\s/.test(nextNonEmpty)
+      );
+      if (!nextIsList) flushList();
       elements.push(<div key={idx} className="h-1" />);
     } else {
       flushList();
