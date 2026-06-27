@@ -6,7 +6,14 @@ import TopicView from './components/TopicView';
 import ChatWidget from './ChatWidget';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState(COURSE_DATA[0].id);
+  const [activeTab, setActiveTab] = useState(
+    () => localStorage.getItem('activeTab') || COURSE_DATA[0].id
+  );
+
+  const handleSetActiveTab = (id) => {
+    localStorage.setItem('activeTab', id);
+    setActiveTab(id);
+  };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [externalMessage, setExternalMessage] = useState(null);
 
@@ -26,7 +33,7 @@ export default function App() {
       <div className="flex-1 flex flex-col md:flex-row relative overflow-hidden min-w-0">
         <Sidebar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setActiveTab={handleSetActiveTab}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
         />
