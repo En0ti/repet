@@ -12,14 +12,64 @@ export default {
 Цель — определить, **какой столбец какой переменной соответствует**. Ответ — это буквы в порядке столбцов (например, \`wyzx\`).
  
 #### Базовые операции и приоритет
- 
-1. **Отрицание** ¬a — Python: \`not a\`
-2. **Конъюнкция** a ∧ b — Python: \`a and b\` (логическое И)
-3. **Дизъюнкция** a ∨ b — Python: \`a or b\` (логическое ИЛИ)
-4. **Импликация** a → b — Python: \`a <= b\` (логическое СЛЕДОВАНИЕ)
-5. **Эквивалентность** a ≡ b — Python: \`a == b\`
- 
-> **Приоритет** (от высокого к низкому): операции выше расставлены от высшего приоритета (not) до низшего, выполняющийся последним (==).
+
+\`\`\`svg
+<svg viewBox="0 0 580 216" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">
+  <defs><style>
+    .hdr{fill:#065f46}.r0{fill:#1e293b}.r1{fill:#0f172a}
+    .ht{fill:#fff;font:bold 11px sans-serif;text-anchor:middle;dominant-baseline:middle}
+    .m{fill:#f9a8d4;font:13px serif;text-anchor:middle;dominant-baseline:middle}
+    .n{fill:#cbd5e1;font:11px sans-serif;dominant-baseline:middle}
+    .c{fill:#34d399;font:11px monospace;text-anchor:middle;dominant-baseline:middle}
+    .ex{fill:#94a3b8;font:10px monospace;dominant-baseline:middle}
+    .pr{fill:#fbbf24;font:bold 12px sans-serif;text-anchor:middle;dominant-baseline:middle}
+    .sep{stroke:#334155;stroke-width:0.5}
+  </style></defs>
+  <rect width="580" height="28" class="hdr"/>
+  <text x="50"  y="14" class="ht">Математика</text>
+  <text x="160" y="14" class="ht">Операция</text>
+  <text x="285" y="14" class="ht">Python</text>
+  <text x="415" y="14" class="ht">Пример</text>
+  <text x="548" y="14" class="ht">Приор.</text>
+  <rect y="28"  width="580" height="34" class="r0"/>
+  <text x="50"  y="45" class="m">¬A</text>
+  <text x="96"  y="45" class="n">Отрицание (НЕ)</text>
+  <text x="285" y="45" class="c">not a</text>
+  <text x="330" y="45" class="ex">not True → False</text>
+  <text x="548" y="45" class="pr">2</text>
+  <rect y="62"  width="580" height="34" class="r1"/>
+  <text x="50"  y="79" class="m">A ∧ B</text>
+  <text x="96"  y="79" class="n">Конъюнкция (И)</text>
+  <text x="285" y="79" class="c">a and b</text>
+  <text x="330" y="79" class="ex">True and False → False</text>
+  <text x="548" y="79" class="pr">3</text>
+  <rect y="96"  width="580" height="34" class="r0"/>
+  <text x="50"  y="113" class="m">A ∨ B</text>
+  <text x="96"  y="113" class="n">Дизъюнкция (ИЛИ)</text>
+  <text x="285" y="113" class="c">a or b</text>
+  <text x="330" y="113" class="ex">False or True → True</text>
+  <text x="548" y="113" class="pr">4</text>
+  <rect y="130" width="580" height="34" class="r1"/>
+  <text x="50"  y="147" class="m">A → B</text>
+  <text x="96"  y="147" class="n">Импликация (ЕСЛИ)</text>
+  <text x="285" y="147" class="c">a &lt;= b</text>
+  <text x="330" y="147" class="ex">True &lt;= False → False</text>
+  <text x="548" y="147" class="pr">1 ⚠</text>
+  <rect y="164" width="580" height="34" class="r0"/>
+  <text x="50"  y="181" class="m">A ↔ B</text>
+  <text x="96"  y="181" class="n">Эквивалентность</text>
+  <text x="285" y="181" class="c">a == b</text>
+  <text x="330" y="181" class="ex">True == True → True</text>
+  <text x="548" y="181" class="pr">1 ⚠</text>
+  <rect y="198" width="580" height="18" fill="#2d1a00"/>
+  <text x="290" y="207" fill="#fbbf24" font-size="10" font-family="sans-serif" text-anchor="middle" dominant-baseline="middle">⚠ &lt;= и == — ВЫСШИЙ приоритет: выполняются ДО not, and, or. Всегда ставь скобки!</text>
+  <line x1="88"  y1="0" x2="88"  y2="198" class="sep"/>
+  <line x1="228" y1="0" x2="228" y2="198" class="sep"/>
+  <line x1="328" y1="0" x2="328" y2="198" class="sep"/>
+  <line x1="520" y1="0" x2="520" y2="198" class="sep"/>
+  <rect width="580" height="216" fill="none" stroke="#1e293b" stroke-width="1.5" rx="6"/>
+</svg>
+\`\`\`
  
 #### Метод "полуавтомат" — вложенные циклы
  
