@@ -4,3 +4,63 @@ html, body {
   overflow-x: hidden;
   max-width: 100vw;
 }
+
+body {
+  background-color: #07071a;
+}
+
+/* =========================================
+   LIGHT THEME
+   ========================================= */
+html.light body {
+  background-color: #f1f5f9;
+  color-scheme: light;
+}
+
+/* --- Backgrounds --- */
+html.light .bg-slate-950  { background-color: #f1f5f9 !important; }
+html.light .bg-slate-900  { background-color: #ffffff !important; }
+html.light .bg-slate-800  { background-color: #f8fafc !important; }
+html.light .bg-slate-850  { background-color: #f8fafc !important; }
+
+/* opacity variants — catch all bg-slate-9xx/N */
+html.light [class*="bg-slate-900\/"] { background-color: rgba(255,255,255,0.92) !important; }
+html.light [class*="bg-slate-800\/"] { background-color: rgba(248,250,252,0.85) !important; }
+html.light [class*="bg-slate-950\/"] { background-color: rgba(241,245,249,0.9) !important; }
+
+/* misc dark bgs */
+html.light .bg-black\/60   { background-color: rgba(0,0,0,0.25) !important; }
+
+/* --- Borders --- */
+html.light [class*="border-slate-8"] { border-color: #e2e8f0 !important; }
+html.light [class*="border-slate-7"] { border-color: #cbd5e1 !important; }
+
+/* --- Text --- */
+html.light .text-white    { color: #0f172a !important; }
+html.light .text-slate-100 { color: #0f172a !important; }
+html.light .text-slate-200 { color: #1e293b !important; }
+html.light .text-slate-300 { color: #334155 !important; }
+html.light .text-slate-350 { color: #475569 !important; }
+html.light .text-slate-400 { color: #64748b !important; }
+html.light .text-slate-450 { color: #64748b !important; }
+html.light .text-slate-500 { color: #94a3b8 !important; }
+
+/* gradient text — keep as-is (violet/cyan look great on light too) */
+
+/* =========================================
+   CODE BLOCKS: stay dark in light theme
+   (add class "code-theme" to wrapper)
+   ========================================= */
+html.light .code-theme {
+  color-scheme: dark;
+}
+html.light .code-theme,
+html.light .code-theme .bg-slate-950 { background-color: #020617 !important; }
+html.light .code-theme .bg-slate-900 { background-color: #0f172a !important; }
+html.light .code-theme .bg-slate-800 { background-color: #1e293b !important; }
+html.light .code-theme [class*="border-slate-8"] { border-color: #1e293b !important; }
+html.light .code-theme [class*="border-slate-7"] { border-color: #334155 !important; }
+html.light .code-theme .text-slate-400 { color: #94a3b8 !important; }
+html.light .code-theme .text-slate-300 { color: #cbd5e1 !important; }
+html.light .code-theme .text-white     { color: #ffffff !important; }
+html.light .code-theme .text-slate-100 { color: #f1f5f9 !important; }

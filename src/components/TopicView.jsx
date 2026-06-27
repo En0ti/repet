@@ -50,11 +50,11 @@ export default function TopicView({ activeTopic, onAskAI }) {
     answers[i] === q.correct && checked[i] ? acc + 1 : acc, 0) ?? 0;
 
   return (
-    <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
+    <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
 
       {/* Заголовок */}
       <div className="space-y-2">
-        <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-xs text-cyan-400 font-semibold uppercase tracking-wider">
           <span>Методическая база</span>
           <span className="text-slate-600">›</span>
           <span>{activeTopic.title.split(":")[0]}</span>
@@ -65,9 +65,9 @@ export default function TopicView({ activeTopic, onAskAI }) {
 
       {/* Теория */}
       <section className="bg-slate-900/60 rounded-2xl border border-slate-800/80 p-5 md:p-7 shadow-xl backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
+        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-cyan-400 to-violet-500" />
         <div className="flex items-center gap-2.5 mb-6">
-          <BookMarked className="w-5 h-5 text-emerald-400" />
+          <BookMarked className="w-5 h-5 text-violet-400" />
           <h3 className="text-lg font-bold text-white">Теоретический минимум</h3>
         </div>
         <div className="prose prose-invert max-w-none text-slate-300">
@@ -78,12 +78,12 @@ export default function TopicView({ activeTopic, onAskAI }) {
       {/* Практика */}
       {hasPractice ? (
         <section className="bg-slate-900/60 rounded-2xl border border-slate-800/80 p-5 md:p-7 shadow-xl backdrop-blur-sm relative">
-          <div className="absolute top-0 left-0 w-2 h-full bg-indigo-500" />
+          <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-violet-500 to-fuchsia-500" />
 
           {/* Заголовок + счётчик */}
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div className="flex items-center gap-2.5">
-              <HelpCircle className="w-5 h-5 text-indigo-400" />
+              <HelpCircle className="w-5 h-5 text-fuchsia-400" />
               <h3 className="text-lg font-bold text-white">Практика</h3>
               {practiceList.length > 1 && (
                 <span className="text-xs text-slate-400">
@@ -91,7 +91,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
                 </span>
               )}
             </div>
-            <span className="text-xs bg-indigo-500/15 text-indigo-300 font-semibold px-2.5 py-1 rounded-lg">
+            <span className="text-xs bg-fuchsia-500/15 text-fuchsia-300 font-semibold px-2.5 py-1 rounded-lg">
               Решено: {correctCount} / {practiceList.length}
             </span>
           </div>
@@ -110,7 +110,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
                     className={`flex-1 h-1.5 rounded-full transition-all ${
                       isCorrect ? 'bg-emerald-500' :
                       isWrong   ? 'bg-rose-500' :
-                      isCurrent ? 'bg-indigo-500' : 'bg-slate-700 hover:bg-slate-600'
+                      isCurrent ? 'bg-violet-500' : 'bg-slate-700 hover:bg-slate-600'
                     }`}
                     title={`Вопрос ${i + 1}`}
                   />
@@ -130,7 +130,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
               {currentQuestion.options.map((option) => {
                 const isSelected = currentAnswer === option.id;
                 let optionClass = "bg-slate-850 hover:bg-slate-800 border-slate-800 text-slate-350";
-                if (isSelected) optionClass = "bg-indigo-950/40 border-indigo-500 text-indigo-200";
+                if (isSelected) optionClass = "bg-violet-950/40 border-violet-500 text-violet-200";
                 if (isChecked) {
                   if (option.id === currentQuestion.correct) {
                     optionClass = "bg-emerald-950/40 border-emerald-500 text-emerald-200";
@@ -155,7 +155,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
                         <XCircle className="w-5 h-5 text-rose-400" />
                       )}
                       <span className={`text-xs px-2 py-0.5 rounded ${
-                        isSelected ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400'
+                        isSelected ? 'bg-violet-500 text-white' : 'bg-slate-800 text-slate-400'
                       }`}>
                         {option.id}
                       </span>
@@ -174,7 +174,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
                     disabled={!currentAnswer}
                     className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
                       currentAnswer
-                        ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20'
+                        ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white shadow-md shadow-violet-600/25'
                         : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                     }`}
                   >
@@ -191,7 +191,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
 
                 <button
                   onClick={() => onAskAI(`У меня вопрос по теме "${activeTopic.title}". Задача: "${currentQuestion.question}". Помоги разобраться, какой подход использовать.`)}
-                  className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1 hover:underline px-2"
+                  className="text-xs text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-1 hover:underline px-2"
                 >
                   <Lightbulb className="w-4 h-4" /> Подсказка ИИ
                 </button>
@@ -247,7 +247,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
             </p>
             <button
               onClick={() => onAskAI(activeTopic.promptSuggestion || `Расскажи про "${activeTopic.title}".`)}
-              className="mt-2 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold flex items-center gap-2 shadow-md shadow-emerald-600/20"
+              className="mt-2 px-5 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold flex items-center gap-2 shadow-md shadow-violet-600/25"
             >
               <Lightbulb className="w-4 h-4" /> Спросить у ИИ
             </button>
@@ -257,7 +257,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
 
       {/* Совет эксперта */}
       <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-3">
-        <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg shrink-0">
+        <div className="p-2 bg-violet-500/10 text-violet-400 rounded-lg shrink-0">
           <Lightbulb className="w-5 h-5" />
         </div>
         <div>

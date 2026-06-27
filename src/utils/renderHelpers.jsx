@@ -1,8 +1,8 @@
 import React from 'react';
 import { Lightbulb, Terminal, FileImage } from 'lucide-react';
+import PythonHighlighter from './pythonHighlighter';
 
 // ───────────────────────── INLINE parser ─────────────────────────
-// Обрабатывает **bold**, *italic*, `code`, $math$ внутри строки.
 export const renderInline = (text, baseKey = 'i') => {
   if (!text) return null;
 
@@ -37,7 +37,7 @@ export const renderInline = (text, baseKey = 'i') => {
       if (end !== -1) {
         flushPlain(i);
         out.push(
-          <code key={`${baseKey}-${nodeIdx++}`} className="bg-slate-800/70 text-emerald-300 px-1.5 py-0.5 rounded font-mono text-[0.85em]">
+          <code key={`${baseKey}-${nodeIdx++}`} className="bg-slate-800/70 text-violet-300 px-1.5 py-0.5 rounded font-mono text-[0.85em]">
             {text.slice(i + 1, end)}
           </code>
         );
@@ -55,7 +55,7 @@ export const renderInline = (text, baseKey = 'i') => {
           flushPlain(i);
           const linkText = text.slice(i + 1, closeBracket);
           const linkHref = text.slice(closeBracket + 2, closeParen);
-          const isFile = /\.(xls|xlsx|csv|zip|pdf|docx)$/i.test(linkHref);
+          const isFile = /\.(txt|xls|xlsx|csv|zip|pdf|docx)$/i.test(linkHref);
           out.push(
             <a
               key={`${baseKey}-${nodeIdx++}`}
@@ -63,7 +63,7 @@ export const renderInline = (text, baseKey = 'i') => {
               download={isFile ? true : undefined}
               target={isFile ? undefined : '_blank'}
               rel="noopener noreferrer"
-              className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+              className="text-violet-400 hover:text-violet-300 underline underline-offset-2"
             >
               {linkText}
             </a>
@@ -114,14 +114,13 @@ export const parseMarkdown = (text) => {
   };
 
   lines.forEach((rawLine, idx) => {
-    const line = rawLine.replace(/\r$/, ''); // защита от windows-окончаний
+    const line = rawLine.replace(/\r$/, '');
     const trimmed = line.trim();
 
-    // ВАЖНО: порядок — от более длинных к более коротким
     if (line.startsWith('#### ')) {
       flushList();
       elements.push(
-        <h4 key={idx} className="text-base font-semibold text-teal-300 mt-5 mb-2 uppercase tracking-wide">
+        <h4 key={idx} className="text-base font-semibold text-cyan-300 mt-5 mb-2 uppercase tracking-wide">
           {renderInline(line.slice(5), `h4-${idx}`)}
         </h4>
       );
@@ -143,20 +142,20 @@ export const parseMarkdown = (text) => {
     } else if (trimmed.startsWith('> ')) {
       flushList();
       elements.push(
-        <blockquote key={idx} className="border-l-4 border-indigo-500 bg-indigo-500/5 pl-4 pr-3 py-2 my-3 italic text-slate-300 rounded-r">
+        <blockquote key={idx} className="border-l-4 border-violet-500 bg-violet-500/5 pl-4 pr-3 py-2 my-3 italic text-slate-300 rounded-r">
           {renderInline(trimmed.slice(2), `bq-${idx}`)}
         </blockquote>
       );
     } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       listBuffer.push(
-        <li key={idx} className="ml-5 list-disc text-slate-300 leading-relaxed marker:text-emerald-500">
+        <li key={idx} className="ml-5 list-disc text-slate-300 leading-relaxed marker:text-violet-400">
           {renderInline(trimmed.slice(2), `li-${idx}`)}
         </li>
       );
     } else if (/^\d+\.\s/.test(trimmed)) {
       const m = trimmed.match(/^(\d+)\.\s(.*)/);
       listBuffer.push(
-        <li key={idx} className="ml-5 list-decimal text-slate-300 leading-relaxed marker:text-indigo-400 marker:font-bold">
+        <li key={idx} className="ml-5 list-decimal text-slate-300 leading-relaxed marker:text-violet-400 marker:font-bold">
           {renderInline(m[2], `oli-${idx}`)}
         </li>
       );
@@ -174,7 +173,6 @@ export const parseMarkdown = (text) => {
         </figure>
       );
     } else if (trimmed === '') {
-      // Не сбрасываем список если следующая непустая строка — тоже элемент списка
       const nextNonEmpty = lines.slice(idx + 1).find(l => l.trim() !== '');
       const nextIsList = nextNonEmpty && (
         /^\s*[-*]\s/.test(nextNonEmpty) || /^\s*\d+\.\s/.test(nextNonEmpty)
@@ -196,24 +194,22 @@ export const parseMarkdown = (text) => {
 };
 
 // ───────────────────────── THEORY рендер ─────────────────────────
-// Делит на блоки по ``` , поддерживает ```svg как живой SVG.
 export const renderTheory = (theoryText) => {
   if (!theoryText) return null;
   const parts = theoryText.split('```');
 
   return parts.map((part, index) => {
-    // нечётные индексы — код-блок
     if (index % 2 === 1) {
       const newlineAt = part.indexOf('\n');
       const language = (newlineAt === -1 ? part : part.slice(0, newlineAt)).trim().toLowerCase();
       const code = newlineAt === -1 ? '' : part.slice(newlineAt + 1).replace(/\n$/, '');
 
-      // ```svg → живой SVG в figure
+      // ```svg → живой SVG
       if (language === 'svg') {
         return (
           <figure key={index} className="my-5 rounded-xl overflow-hidden border border-slate-800 bg-slate-900/40 p-4">
             <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
-              <FileImage className="w-4 h-4 text-indigo-400" />
+              <FileImage className="w-4 h-4 text-violet-400" />
               <span className="uppercase tracking-wider font-semibold">Иллюстрация</span>
             </div>
             <div className="flex justify-center w-full overflow-hidden" dangerouslySetInnerHTML={{ __html: code }} />
@@ -221,27 +217,30 @@ export const renderTheory = (theoryText) => {
         );
       }
 
-      // обычный код
+      // обычный код — добавляем code-theme чтобы оставаться тёмным в светлой теме
       return (
-        <div key={index} className="my-4 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 font-mono text-sm">
+        <div key={index} className="code-theme my-4 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 font-mono text-sm">
           <div className="flex items-center justify-between px-4 py-2 bg-slate-900 border-b border-slate-800 text-slate-400 text-xs">
             <span className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-emerald-400" />
+              <Terminal className="w-4 h-4 text-violet-400" />
               {language.toUpperCase() || 'CODE'}
             </span>
             <button
               onClick={() => navigator.clipboard.writeText(code)}
-              className="hover:text-emerald-400 transition-colors"
+              className="hover:text-violet-400 transition-colors"
               title="Копировать код"
             >
               Копировать
             </button>
           </div>
-          <pre className="p-4 overflow-x-auto text-emerald-300 leading-relaxed"><code>{code}</code></pre>
+          <pre className="p-4 overflow-x-auto leading-relaxed" style={{ color: '#D4D4D4' }}>
+            <code>
+              {language === 'python' ? <PythonHighlighter code={code} /> : code}
+            </code>
+          </pre>
         </div>
       );
     }
-    // чётные — обычный markdown
     return <div key={index}>{parseMarkdown(part)}</div>;
   });
 };
@@ -257,7 +256,7 @@ export const renderMessageContent = (text) => {
       const language = (newlineAt === -1 ? part : part.slice(0, newlineAt)).trim() || 'python';
       const code = newlineAt === -1 ? '' : part.slice(newlineAt + 1).replace(/\n$/, '');
       return (
-        <div key={index} className="my-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950 font-mono text-xs w-full max-w-full">
+        <div key={index} className="code-theme my-2 rounded-lg overflow-hidden border border-slate-800 bg-slate-950 font-mono text-xs w-full max-w-full">
           <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-slate-400">
             <span>{language}</span>
             <button
@@ -267,12 +266,15 @@ export const renderMessageContent = (text) => {
               Копировать
             </button>
           </div>
-          <pre className="p-3 overflow-x-auto text-emerald-300"><code>{code}</code></pre>
+          <pre className="p-3 overflow-x-auto" style={{ color: '#D4D4D4' }}>
+            <code>
+              {language === 'python' ? <PythonHighlighter code={code} /> : code}
+            </code>
+          </pre>
         </div>
       );
     }
 
-    // Inline-разметка в чате
     return (
       <span key={index} className="whitespace-pre-wrap break-words">
         {renderInline(part, `chat-${index}`)}
