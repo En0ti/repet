@@ -102,72 +102,82 @@ fnmatch('9999',     '[0-4]*')  # False — не начинается с 0-4
 \`zip(a, a[1:], a[2:])\` — берёт три смещённые копии списка и соединяет их поэлементно.
 
 \`\`\`svg
-<svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">
+<svg viewBox="0 0 560 272" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">
   <defs><style>
     .bg{fill:#0f172a}
     .box{fill:#1e293b;stroke:#334155;stroke-width:1}
     .hbox{fill:#065f46;stroke:#334155;stroke-width:1}
-    .tri{fill:#1e3a5f;stroke:#3b82f6;stroke-width:1.5}
-    .ht{fill:#fff;font:bold 11px sans-serif;text-anchor:middle;dominant-baseline:middle}
-    .num{fill:#34d399;font:11px monospace;text-anchor:middle;dominant-baseline:middle}
+    .num{font:11px monospace;text-anchor:middle;dominant-baseline:middle}
     .lbl{fill:#94a3b8;font:11px sans-serif;dominant-baseline:middle}
-    .arr{stroke:#fbbf24;stroke-width:1.5;fill:none;stroke-dasharray:4,2}
+    .sep{stroke:#1e293b;stroke-width:1}
   </style></defs>
 
-  <rect width="560" height="210" class="bg" rx="8"/>
+  <rect width="560" height="272" class="bg" rx="8"/>
 
   <!-- Row labels -->
-  <text x="45"  y="48"  class="lbl" fill="#60a5fa">a</text>
-  <text x="28"  y="88"  class="lbl" fill="#c084fc">a[1:]</text>
-  <text x="28"  y="128" class="lbl" fill="#f97316">a[2:]</text>
-  <text x="32"  y="175" class="lbl" fill="#fbbf24">zip →</text>
+  <text x="46"  y="46"  class="lbl" fill="#60a5fa">a</text>
+  <text x="30"  y="84"  class="lbl" fill="#c084fc">a[1:]</text>
+  <text x="30"  y="122" class="lbl" fill="#f97316">a[2:]</text>
 
-  <!-- Elements: a -->
-  <rect x="70"  y="36" width="52" height="24" class="hbox" rx="3"/>
-  <rect x="128" y="36" width="52" height="24" class="box" rx="3"/>
-  <rect x="186" y="36" width="52" height="24" class="box" rx="3"/>
-  <rect x="244" y="36" width="52" height="24" class="box" rx="3"/>
-  <rect x="302" y="36" width="52" height="24" class="box" rx="3"/>
-  <text x="96"  y="48" class="num" fill="#60a5fa">73597</text>
-  <text x="154" y="48" class="num" fill="#60a5fa">42306</text>
-  <text x="212" y="48" class="num" fill="#60a5fa">86104</text>
-  <text x="270" y="48" class="num" fill="#60a5fa">15112</text>
-  <text x="328" y="48" class="num" fill="#60a5fa">40650</text>
-  <text x="370" y="48" class="lbl">...</text>
+  <!-- Cells: a (row y=34) -->
+  <rect x="70"  y="34" width="56" height="24" class="hbox" rx="3"/>
+  <rect x="130" y="34" width="56" height="24" class="box" rx="3"/>
+  <rect x="190" y="34" width="56" height="24" class="box" rx="3"/>
+  <rect x="250" y="34" width="56" height="24" class="box" rx="3"/>
+  <rect x="310" y="34" width="56" height="24" class="box" rx="3"/>
+  <text x="98"  y="46" class="num" fill="#60a5fa">73597</text>
+  <text x="158" y="46" class="num" fill="#60a5fa">42306</text>
+  <text x="218" y="46" class="num" fill="#60a5fa">86104</text>
+  <text x="278" y="46" class="num" fill="#60a5fa">15112</text>
+  <text x="338" y="46" class="num" fill="#60a5fa">40650</text>
+  <text x="382" y="46" class="lbl">...</text>
 
-  <!-- Elements: a[1:] -->
-  <rect x="128" y="76" width="52" height="24" class="hbox" rx="3"/>
-  <rect x="186" y="76" width="52" height="24" class="box" rx="3"/>
-  <rect x="244" y="76" width="52" height="24" class="box" rx="3"/>
-  <rect x="302" y="76" width="52" height="24" class="box" rx="3"/>
-  <text x="154" y="88" class="num" fill="#c084fc">42306</text>
-  <text x="212" y="88" class="num" fill="#c084fc">86104</text>
-  <text x="270" y="88" class="num" fill="#c084fc">15112</text>
-  <text x="328" y="88" class="num" fill="#c084fc">40650</text>
-  <text x="370" y="88" class="lbl">...</text>
+  <!-- Cells: a[1:] (row y=72) -->
+  <rect x="130" y="72" width="56" height="24" class="hbox" rx="3"/>
+  <rect x="190" y="72" width="56" height="24" class="box" rx="3"/>
+  <rect x="250" y="72" width="56" height="24" class="box" rx="3"/>
+  <rect x="310" y="72" width="56" height="24" class="box" rx="3"/>
+  <text x="158" y="84" class="num" fill="#c084fc">42306</text>
+  <text x="218" y="84" class="num" fill="#c084fc">86104</text>
+  <text x="278" y="84" class="num" fill="#c084fc">15112</text>
+  <text x="338" y="84" class="num" fill="#c084fc">40650</text>
+  <text x="382" y="84" class="lbl">...</text>
 
-  <!-- Elements: a[2:] -->
-  <rect x="186" y="116" width="52" height="24" class="hbox" rx="3"/>
-  <rect x="244" y="116" width="52" height="24" class="box" rx="3"/>
-  <rect x="302" y="116" width="52" height="24" class="box" rx="3"/>
-  <text x="212" y="128" class="num" fill="#f97316">86104</text>
-  <text x="270" y="128" class="num" fill="#f97316">15112</text>
-  <text x="328" y="128" class="num" fill="#f97316">40650</text>
-  <text x="370" y="128" class="lbl">...</text>
+  <!-- Cells: a[2:] (row y=110) -->
+  <rect x="190" y="110" width="56" height="24" class="hbox" rx="3"/>
+  <rect x="250" y="110" width="56" height="24" class="box" rx="3"/>
+  <rect x="310" y="110" width="56" height="24" class="box" rx="3"/>
+  <text x="218" y="122" class="num" fill="#f97316">86104</text>
+  <text x="278" y="122" class="num" fill="#f97316">15112</text>
+  <text x="338" y="122" class="num" fill="#f97316">40650</text>
+  <text x="382" y="122" class="lbl">...</text>
 
-  <!-- Bracket: first triple -->
-  <rect x="68" y="155" width="172" height="28" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5" rx="4"/>
-  <text x="154" y="169" fill="#fbbf24" font-size="10" font-family="monospace" text-anchor="middle" dominant-baseline="middle">(73597, 42306, 86104)</text>
+  <!-- Separator -->
+  <line x1="10" y1="148" x2="550" y2="148" class="sep"/>
 
-  <!-- Bracket: second triple -->
-  <rect x="126" y="155" width="172" height="28" fill="#1e2d1e" stroke="#34d399" stroke-width="1.5" rx="4"/>
-  <text x="212" y="169" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle" dominant-baseline="middle">(42306, 86104, 15112)</text>
+  <!-- zip label -->
+  <text x="10" y="163" class="lbl" fill="#fbbf24" font-weight="bold">zip →</text>
 
-  <!-- Bracket: third triple -->
-  <rect x="184" y="155" width="172" height="28" fill="#2d1e1e" stroke="#f97316" stroke-width="1.5" rx="4"/>
-  <text x="270" y="169" fill="#f97316" font-size="10" font-family="monospace" text-anchor="middle" dominant-baseline="middle">(86104, 15112, 40650)</text>
+  <!-- Triple 1 (blue) -->
+  <rect x="68" y="152" width="474" height="30" fill="#1e293b" rx="4"/>
+  <rect x="68" y="152" width="6"   height="30" fill="#3b82f6" rx="2"/>
+  <text x="85" y="167" fill="#60a5fa" font-size="10" font-family="monospace" dominant-baseline="middle">тройка 1:</text>
+  <text x="155" y="167" fill="#fbbf24" font-size="11" font-family="monospace" dominant-baseline="middle">(73597,  42306,  86104)</text>
 
-  <text x="370" y="169" class="lbl">...</text>
+  <!-- Triple 2 (purple) -->
+  <rect x="68" y="186" width="474" height="30" fill="#1e1e2e" rx="4"/>
+  <rect x="68" y="186" width="6"   height="30" fill="#c084fc" rx="2"/>
+  <text x="85" y="201" fill="#c084fc" font-size="10" font-family="monospace" dominant-baseline="middle">тройка 2:</text>
+  <text x="155" y="201" fill="#fbbf24" font-size="11" font-family="monospace" dominant-baseline="middle">(42306,  86104,  15112)</text>
+
+  <!-- Triple 3 (orange) -->
+  <rect x="68" y="220" width="474" height="30" fill="#1e1810" rx="4"/>
+  <rect x="68" y="220" width="6"   height="30" fill="#f97316" rx="2"/>
+  <text x="85" y="235" fill="#f97316" font-size="10" font-family="monospace" dominant-baseline="middle">тройка 3:</text>
+  <text x="155" y="235" fill="#fbbf24" font-size="11" font-family="monospace" dominant-baseline="middle">(86104,  15112,  40650)</text>
+
+  <!-- dots -->
+  <text x="85" y="258" class="lbl">...</text>
 </svg>
 \`\`\`
 
