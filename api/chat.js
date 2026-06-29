@@ -35,7 +35,9 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile", // Одна из самых быстрых и умных моделей
-        messages: messages
+        messages: messages,
+        temperature: 0.4, // ниже температура — меньше случайных «иероглифов» в тексте
+        top_p: 0.9
       })
     });
 
