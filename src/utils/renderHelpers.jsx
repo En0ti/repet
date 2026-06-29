@@ -154,9 +154,12 @@ export const parseMarkdown = (text) => {
       );
     } else if (/^\d+\.\s/.test(trimmed)) {
       const m = trimmed.match(/^(\d+)\.\s(.*)/);
+      // Номер берём явно из текста (m[1]), а не из CSS-счётчика — иначе при
+      // картинках между пунктами список разбивается и нумерация сбрасывается на 1.
       listBuffer.push(
-        <li key={idx} className="ml-5 list-decimal text-slate-300 leading-relaxed marker:text-violet-400 marker:font-bold">
-          {renderInline(m[2], `oli-${idx}`)}
+        <li key={idx} className="ml-5 flex gap-2 text-slate-300 leading-relaxed">
+          <span className="font-bold text-violet-400 shrink-0">{m[1]}.</span>
+          <span>{renderInline(m[2], `oli-${idx}`)}</span>
         </li>
       );
     } else if (/^!\[.*?\]\(.+?\)$/.test(trimmed)) {

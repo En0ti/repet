@@ -238,7 +238,7 @@ print(net.num_addresses) # 16
 
 #### Найти маску по адресу сети
 
-![Задача: найти маску по адресу сети](/task13-mask.png)
+![Задача: найти маску по адресу сети](/tasks/13/mask.png)
 
 \`\`\`python
 from ipaddress import *
@@ -255,7 +255,7 @@ for mask in range(33):
 
 #### Найти количество адресов в общей сети двух IP
 
-![Задача: найти количество адресов в общей сети](/task13-count.png)
+![Задача: найти количество адресов в общей сети](/tasks/13/count.png)
 
 \`\`\`python
 from ipaddress import *
@@ -273,7 +273,7 @@ for mask in range(33):
 
 #### Проверка что IP является узлом
 
-![Задача: проверка что IP является узлом](/task13-node.png)
+![Задача: проверка что IP является узлом](/tasks/13/node.png)
 
 \`\`\`python
 from ipaddress import *
@@ -294,7 +294,7 @@ for mask in range(33):
 
 #### Перебор адресов в сети + проверка двоичного условия
 
-![Задача: перебор адресов с двоичным условием](/task13-binary.png)
+![Задача: перебор адресов с двоичным условием](/tasks/13/binary.png)
 
 \`\`\`python
 from ipaddress import *
@@ -319,7 +319,7 @@ print(k)
 
 #### A — количество единиц в маске
 
-![Задача: A в маске](/task13-a-mask.png)
+![Задача: A в маске](/tasks/13/a-mask.png)
 
 \`\`\`python
 from ipaddress import *
@@ -341,7 +341,7 @@ for mask in range(16, 25):
 
 #### A — байт в IP-адресе
 
-![Задача: A в IP-адресе](/task13-a-ip.png)
+![Задача: A в IP-адресе](/tasks/13/a-ip.png)
 
 \`\`\`python
 from ipaddress import *

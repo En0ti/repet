@@ -84,7 +84,7 @@ export default {
 
 ### Разбор примера
 
-![Задача: рекурсивные функции F и G](/task16-example.png)
+![Задача: рекурсивные функции F и G](/tasks/16/example.png)
 
 \`\`\`python
 from functools import *
