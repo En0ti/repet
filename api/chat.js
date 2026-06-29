@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile", // Одна из самых быстрых и умных моделей
+        model: "meta-llama/llama-4-maverick-17b-128e-instruct", // Llama 4 Maverick — быстрая MoE-модель, отдельная дневная квота
         messages: messages,
         temperature: 0.4, // ниже температура — меньше случайных «иероглифов» в тексте
         top_p: 0.9

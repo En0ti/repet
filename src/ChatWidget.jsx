@@ -41,7 +41,7 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
 
-    const systemPrompt = getSystemPrompt(activeTopic);
+    const systemPrompt = getSystemPrompt(activeTopic, messageText);
 
     try {
       const recentMessages = messages.slice(-4).map(msg => ({
