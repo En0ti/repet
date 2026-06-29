@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   BookMarked, HelpCircle, CheckCircle2, XCircle, RefreshCw, Lightbulb, Clock,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, ChevronDown, ChevronUp, List, ArrowUp
 } from 'lucide-react';
-import { renderTheory, renderInline } from '../utils/renderHelpers';
+import { renderTheory, renderInline, extractHeadings } from '../utils/renderHelpers';
 
 // Если practice — объект, превращаем в массив из одного элемента
 const normalizePractice = (p) => {
@@ -18,6 +18,28 @@ export default function TopicView({ activeTopic, onAskAI }) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({});   // { 0: 'A', 1: 'C', ... }
   const [checked, setChecked] = useState({});   // { 0: true, ... }
+  const [tocOpen, setTocOpen] = useState(true);
+  const [showTop, setShowTop] = useState(false);
+  const mainRef = React.useRef(null);
+
+  const handleScroll = () => {
+    setShowTop((mainRef.current?.scrollTop || 0) > 600);
+  };
+
+  const scrollToTop = () => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Оглавление из заголовков теории
+  const headings = React.useMemo(
+    () => extractHeadings(activeTopic.theory),
+    [activeTopic.theory]
+  );
+
+  const scrollToHeading = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // Сброс при смене темы
   useEffect(() => {
@@ -50,7 +72,7 @@ export default function TopicView({ activeTopic, onAskAI }) {
     answers[i] === q.correct && checked[i] ? acc + 1 : acc, 0) ?? 0;
 
   return (
-    <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
+    <main ref={mainRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 space-y-8 max-w-4xl mx-auto w-full pb-24">
 
       {/* Заголовок */}
       <div className="space-y-2">
@@ -62,6 +84,41 @@ export default function TopicView({ activeTopic, onAskAI }) {
         <h2 className="text-3xl font-extrabold text-white tracking-tight">{activeTopic.title}</h2>
         <p className="text-slate-400 text-sm md:text-base leading-relaxed">{activeTopic.description}</p>
       </div>
+
+      {/* Оглавление (если заголовков достаточно) */}
+      {headings.length >= 4 && (
+        <nav className="bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 md:p-5 shadow-lg">
+          <button
+            onClick={() => setTocOpen(o => !o)}
+            className="w-full flex items-center justify-between text-left group"
+          >
+            <span className="flex items-center gap-2 text-sm font-bold text-white">
+              <List className="w-4 h-4 text-cyan-400" /> Содержание
+            </span>
+            {tocOpen
+              ? <ChevronUp className="w-4 h-4 text-slate-400 group-hover:text-white" />
+              : <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-white" />}
+          </button>
+          {tocOpen && (
+            <ul className="mt-3 space-y-1 border-t border-slate-800 pt-3">
+              {headings.map((h, i) => (
+                <li key={`${h.id}-${i}`}>
+                  <button
+                    onClick={() => scrollToHeading(h.id)}
+                    className={`text-left w-full rounded-md px-2 py-1 transition-colors hover:bg-slate-800/70 hover:text-cyan-300 ${
+                      h.level >= 4
+                        ? 'pl-6 text-[13px] text-slate-400'
+                        : 'text-sm font-semibold text-slate-200'
+                    }`}
+                  >
+                    {h.text}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </nav>
+      )}
 
       {/* Теория */}
       <section className="bg-slate-900/60 rounded-2xl border border-slate-800/80 p-5 md:p-7 shadow-xl backdrop-blur-sm relative overflow-hidden">
@@ -267,6 +324,17 @@ export default function TopicView({ activeTopic, onAskAI }) {
           </p>
         </div>
       </div>
+
+      {/* Кнопка «наверх» */}
+      {showTop && (
+        <button
+          onClick={scrollToTop}
+          title="Наверх"
+          className="fixed bottom-24 right-3 sm:bottom-28 sm:right-6 z-40 p-3 rounded-full bg-slate-800/90 hover:bg-violet-600 text-white border border-slate-700 shadow-xl backdrop-blur transition-all hover:scale-105"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
+      )}
 
     </main>
   );

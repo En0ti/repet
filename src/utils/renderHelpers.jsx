@@ -2,6 +2,35 @@ import React from 'react';
 import { Lightbulb, Terminal, FileImage } from 'lucide-react';
 import PythonHighlighter from './pythonHighlighter';
 
+// ───────────────────────── Заголовки / якоря ─────────────────────────
+// Детерминированный id из текста заголовка (одинаковый и для якоря, и для TOC).
+export const slugifyHeading = (raw) =>
+  'sec-' + (
+    String(raw).replace(/[*`]/g, '').trim().toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, '-')
+      .replace(/^-+|-+$/g, '') || 'section'
+  );
+
+// Достаём заголовки (##, ###, ####) из markdown, пропуская код-блоки ```...```
+export const extractHeadings = (text) => {
+  if (!text) return [];
+  const out = [];
+  let inFence = false;
+  for (const rawLine of text.split('\n')) {
+    const line = rawLine.replace(/\r$/, '');
+    if (line.trimStart().startsWith('```')) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    let level = 0, txt = null;
+    if (line.startsWith('#### ')) { level = 4; txt = line.slice(5); }
+    else if (line.startsWith('### ')) { level = 3; txt = line.slice(4); }
+    else if (line.startsWith('## ')) { level = 2; txt = line.slice(3); }
+    if (txt != null) {
+      out.push({ level, id: slugifyHeading(txt), text: txt.replace(/[*`]/g, '').trim() });
+    }
+  }
+  return out;
+};
+
 // ───────────────────────── INLINE parser ─────────────────────────
 export const renderInline = (text, baseKey = 'i') => {
   if (!text) return null;
@@ -120,14 +149,14 @@ export const parseMarkdown = (text) => {
     if (line.startsWith('#### ')) {
       flushList();
       elements.push(
-        <h4 key={idx} className="text-base font-semibold text-cyan-300 mt-5 mb-2 uppercase tracking-wide">
+        <h4 key={idx} id={slugifyHeading(line.slice(5))} className="scroll-mt-4 text-base font-semibold text-cyan-300 mt-5 mb-2 uppercase tracking-wide">
           {renderInline(line.slice(5), `h4-${idx}`)}
         </h4>
       );
     } else if (line.startsWith('### ')) {
       flushList();
       elements.push(
-        <h3 key={idx} className="text-xl font-bold text-white mt-6 mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
+        <h3 key={idx} id={slugifyHeading(line.slice(4))} className="scroll-mt-4 text-xl font-bold text-white mt-6 mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
           <Lightbulb className="text-amber-400 w-5 h-5 shrink-0" />
           <span>{renderInline(line.slice(4), `h3-${idx}`)}</span>
         </h3>
@@ -135,7 +164,7 @@ export const parseMarkdown = (text) => {
     } else if (line.startsWith('## ')) {
       flushList();
       elements.push(
-        <h2 key={idx} className="text-2xl font-bold text-white mt-6 mb-3">
+        <h2 key={idx} id={slugifyHeading(line.slice(3))} className="scroll-mt-4 text-2xl font-bold text-white mt-6 mb-3">
           {renderInline(line.slice(3), `h2-${idx}`)}
         </h2>
       );
