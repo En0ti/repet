@@ -65,7 +65,7 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
       const aiText =
         data.candidates?.[0]?.content?.parts?.[0]?.text ||
         data.choices?.[0]?.message?.content ||
-        "Извини, не удалось получить корректный ответ.";
+        (data.error ? `⚠️ Ошибка нейросети: ${data.error}` : "Извини, не удалось получить корректный ответ.");
 
       setMessages(prev => [...prev, {
         role: "assistant",
