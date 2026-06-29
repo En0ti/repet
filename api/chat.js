@@ -27,26 +27,49 @@ export default async function handler(req, res) {
       }))
     ];
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: "meta-llama/llama-4-maverick-17b-128e-instruct", // Llama 4 Maverick — быстрая MoE-модель, отдельная дневная квота
-        messages: messages,
-        temperature: 0.4, // ниже температура — меньше случайных «иероглифов» в тексте
-        top_p: 0.9
-      })
-    });
+    // Список моделей по приоритету. Пробуем по очереди: если модель недоступна
+    // или упёрлась в лимит (у каждой своя квота) — переходим к следующей.
+    const MODELS = [
+      "llama-3.1-8b-instant",        // быстрая, почти всегда доступна
+      "meta-llama/llama-4-scout-17b-16e-instruct",
+      "llama-3.3-70b-versatile"      // умная, запасной вариант
+    ];
 
-    const data = await response.json();
-    if (!response.ok || data.error) {
-      const msg = data.error?.message || `Groq вернул статус ${response.status}`;
-      return res.status(200).json({ error: msg });
+    let lastError = 'Не удалось получить ответ ни от одной модели.';
+
+    for (const model of MODELS) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model,
+          messages: messages,
+          temperature: 0.4, // ниже температура — меньше случайных «иероглифов» в тексте
+          top_p: 0.9
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && !data.error) {
+        return res.status(200).json(data);
+      }
+
+      // Ошибка — запоминаем и пробуем следующую модель
+      lastError = data.error?.message || `Groq вернул статус ${response.status}`;
+      const code = data.error?.code || '';
+      const decommissioned = /not exist|do not have access|decommission/i.test(lastError);
+      const rateLimited = response.status === 429 || code === 'rate_limit_exceeded';
+
+      // Переходим к следующей модели только если есть смысл (недоступна / лимит).
+      // На прочих ошибках (например, плохой запрос) — прекращаем.
+      if (!decommissioned && !rateLimited) break;
     }
-    return res.status(200).json(data);
+
+    return res.status(200).json({ error: lastError });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
