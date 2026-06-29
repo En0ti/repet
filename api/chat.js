@@ -13,6 +13,16 @@ export default async function handler(req, res) {
 
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 
+  // 👇 Сообщение, которое увидит ученик, когда дневной лимит нейросети исчерпан.
+  // Замени РЕКВИЗИТЫ на свои (номер карты / телефон СБП и т.п.).
+  const SUPPORT_MESSAGE =
+    '🌱 Наш ИИ-помощник пока работает на бесплатном тарифе и строго ограничен по нагрузке — ' +
+    'на сегодня лимит запросов исчерпан. Попробуй, пожалуйста, снова попозже или завтра 🙏\n\n' +
+    'Это молодой проект-методичка, который я развиваю в одиночку. Если хочешь поддержать развитие ' +
+    'и снять ограничения нейросети — буду очень благодарен за любую копеечку:\n\n' +
+    '💳 СБП / карта: 2202 2081 3524 3112\n\n' +
+    'Спасибо, что пользуешься! ❤️';
+
   try {
     const { contents, systemInstruction } = req.body;
 
@@ -36,6 +46,7 @@ export default async function handler(req, res) {
     ];
 
     let lastError = 'Не удалось получить ответ ни от одной модели.';
+    let lastWasRateLimit = false;
 
     for (const model of MODELS) {
       const response = await fetch(url, {
@@ -62,13 +73,19 @@ export default async function handler(req, res) {
       lastError = data.error?.message || `Groq вернул статус ${response.status}`;
       const code = data.error?.code || '';
       const decommissioned = /not exist|do not have access|decommission/i.test(lastError);
-      const rateLimited = response.status === 429 || code === 'rate_limit_exceeded';
+      const rateLimited = response.status === 429 || code === 'rate_limit_exceeded'
+        || /rate limit|tokens per/i.test(lastError);
+      lastWasRateLimit = rateLimited;
 
       // Переходим к следующей модели только если есть смысл (недоступна / лимит).
       // На прочих ошибках (например, плохой запрос) — прекращаем.
       if (!decommissioned && !rateLimited) break;
     }
 
+    // Если все модели упёрлись в лимит — показываем дружелюбное сообщение про поддержку проекта.
+    if (lastWasRateLimit) {
+      return res.status(200).json({ error: SUPPORT_MESSAGE, limited: true });
+    }
     return res.status(200).json({ error: lastError });
   } catch (error) {
     return res.status(500).json({ error: error.message });

@@ -65,7 +65,10 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
       const aiText =
         data.candidates?.[0]?.content?.parts?.[0]?.text ||
         data.choices?.[0]?.message?.content ||
-        (data.error ? `⚠️ Ошибка нейросети: ${data.error}` : "Извини, не удалось получить корректный ответ.");
+        // Лимит исчерпан — показываем дружелюбное сообщение как есть, без префикса «Ошибка»
+        (data.limited ? data.error
+          : data.error ? `⚠️ Ошибка нейросети: ${data.error}`
+          : "Извини, не удалось получить корректный ответ.");
 
       setMessages(prev => [...prev, {
         role: "assistant",
