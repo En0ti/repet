@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, X, Send, Sparkles, RefreshCw } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, RefreshCw, Maximize2, Minimize2 } from 'lucide-react';
 import { getSystemPrompt } from './promptManager';
 import { renderMessageContent } from './utils/renderHelpers';
 
 export default function ChatWidget({ activeTopic, externalMessage, onExternalMessageConsumed }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([{
     role: "assistant",
     text: "Привет! Я твой персональный ИИ-ассистент по ЕГЭ по информатике. 🤖\n\nВыбери тему слева или задай свой вопрос!",
@@ -90,7 +91,7 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
   }]);
 
   return (
-    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50">
+    <div className={`fixed z-50 ${isOpen && isExpanded ? 'inset-0 flex items-center justify-center p-2 sm:p-6' : 'bottom-4 right-3 sm:bottom-6 sm:right-6'}`}>
       {/* Кнопка открытия */}
       {!isOpen && (
         <button
@@ -104,7 +105,11 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
 
       {/* Окно чата */}
       {isOpen && (
-        <div className="w-[calc(100vw-1.5rem)] sm:w-[380px] h-[80vh] sm:h-[560px] max-h-[560px] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className={`bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all ${
+          isExpanded
+            ? 'w-full h-full max-w-[1100px] max-h-[900px]'
+            : 'w-[calc(100vw-1.5rem)] sm:w-[460px] h-[85vh] sm:h-[680px] max-h-[85vh]'
+        }`}>
 
           {/* Хедер */}
           <div className="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-950">
@@ -125,6 +130,9 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
             <div className="flex items-center gap-2">
               <button onClick={resetChat} className="text-slate-400 hover:text-white hover:bg-slate-800 p-2 rounded-lg transition-all" title="Очистить чат">
                 <RefreshCw className="w-4 h-4" />
+              </button>
+              <button onClick={() => setIsExpanded(e => !e)} className="text-slate-400 hover:text-white hover:bg-slate-800 p-2 rounded-lg transition-all" title={isExpanded ? 'Свернуть' : 'Развернуть на весь экран'}>
+                {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
               </button>
               <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white hover:bg-slate-800 p-2 rounded-lg transition-all">
                 <X className="w-5 h-5" />
