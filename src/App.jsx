@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COURSE_DATA } from './data/topics';
+import { LEVELS } from './data/levels';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import TopicView from './components/TopicView';
@@ -14,6 +15,15 @@ export default function App() {
     () => localStorage.getItem('desktopSidebar') !== 'closed'
   );
   const [externalMessage, setExternalMessage] = useState(null);
+
+  // Уровень подготовки (статус) — общий для сайдбара и шапки
+  const [levelId, setLevelIdState] = useState(() => localStorage.getItem('levelId') || null);
+  const setLevelId = (id) => {
+    if (id) localStorage.setItem('levelId', id);
+    else localStorage.removeItem('levelId');
+    setLevelIdState(id);
+  };
+  const currentLevel = LEVELS.find((l) => l.id === levelId) || null;
 
   const toggleDesktopSidebar = () => setDesktopSidebarOpen(prev => {
     localStorage.setItem('desktopSidebar', prev ? 'closed' : 'open');
@@ -51,7 +61,12 @@ export default function App() {
       <Header
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
-        onWarmup={() => sendToChat("Привет! Дай мне сложную задачу из КЕГЭ по информатике для разминки.")}
+        onWarmup={() => sendToChat(
+          activeTopic?.title
+            ? `Дай мне одну тренировочную задачу строго в стиле реального ЕГЭ по информатике по теме «${activeTopic.title}». Сформулируй ТОЛЬКО условие с конкретными данными, без решения и ответа. Я решу сам, потом проверишь.`
+            : "Дай мне одну тренировочную задачу строго в стиле реального ЕГЭ по информатике — выбери конкретный номер. Сформулируй ТОЛЬКО условие с конкретными данными, без решения. Я решу сам, потом проверишь."
+        )}
+        level={currentLevel}
         theme={theme}
         toggleTheme={toggleTheme}
       />
@@ -64,6 +79,8 @@ export default function App() {
           setMobileMenuOpen={setMobileMenuOpen}
           desktopSidebarOpen={desktopSidebarOpen}
           toggleDesktopSidebar={toggleDesktopSidebar}
+          levelId={levelId}
+          setLevelId={setLevelId}
         />
 
         <TopicView

@@ -158,10 +158,14 @@ export default function ChatWidget({ activeTopic, externalMessage, onExternalMes
               Код Задания 24
             </button>
             <button
-              onClick={() => handleSendMessage("Привет! Дай мне сложную задачу из КЕГЭ по информатике для разминки.")}
+              onClick={() => handleSendMessage(
+                activeTopic?.title
+                  ? `Дай мне одну тренировочную задачу строго в стиле реального ЕГЭ по информатике по теме «${activeTopic.title}». Сформулируй ТОЛЬКО условие, как на экзамене, с конкретными числами/данными — без решения и без ответа. Я попробую решить сам, потом ты проверишь.`
+                  : "Дай мне одну тренировочную задачу строго в стиле реального ЕГЭ по информатике — выбери конкретный номер задания. Сформулируй ТОЛЬКО условие с конкретными данными, без решения и ответа. Я решу сам, потом проверишь."
+              )}
               className="text-[10px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 px-3 rounded-full transition-all shrink-0"
             >
-              Разминка
+              Разминка{activeTopic?.title ? ` (${activeTopic.title.split(":")[0].replace("Задание ", "№").replace("Задания ", "№")})` : ""}
             </button>
           </div>
 
