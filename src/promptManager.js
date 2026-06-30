@@ -22,6 +22,22 @@ COURSE_DATA.forEach((t) => {
 });
 
 /**
+ * Чистая выжимка из теории топика: убираем код/SVG/картинки/ссылки,
+ * оставляем текст (условие и формат задания). Ограничиваем по длине.
+ */
+const cleanExcerpt = (theory, max = 1600) => {
+  if (!theory) return '';
+  let t = String(theory)
+    .replace(/```[\s\S]*?```/g, ' ')          // код и svg-блоки
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')      // картинки
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')    // ссылки → их текст
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  return t.length > max ? t.slice(0, max).trim() + ' …' : t;
+};
+
+/**
  * Функция генерирует системный промпт для нейросети.
  * @param {object} topic - Текущий открытый топик (может быть null).
  * @param {string} userText - Текст вопроса ученика (для подгрузки методики нужного задания).
@@ -30,18 +46,30 @@ COURSE_DATA.forEach((t) => {
 export const getSystemPrompt = (topic, userText = '') => {
   // Собираем методички: открытый топик + те задания, чьи номера упомянуты в вопросе.
   const relevant = new Map();
-  if (topic?.aiContext) relevant.set(topic.id, topic);
+  if (topic && (topic.aiContext || topic.theory)) relevant.set(topic.id, topic);
   (String(userText).match(/\d{1,2}/g) || []).forEach((s) => {
     const t = NUM_TO_TOPIC[Number(s)];
-    if (t?.aiContext) relevant.set(t.id, t);
+    if (t && (t.aiContext || t.theory)) relevant.set(t.id, t);
   });
 
-  const methodics = [...relevant.values()]
-    .map((t) => `### Методика по теме «${t.title}»\n${t.aiContext}`)
-    .join('\n\n');
+  const blocks = [...relevant.values()].map((t) => {
+    const isOpen = topic && t.id === topic.id;
+    if (isOpen) {
+      // Для открытой темы даём и реальное условие/формат (из теории), и методику.
+      const excerpt = cleanExcerpt(t.theory);
+      return `### ОТКРЫТАЯ СЕЙЧАС ТЕМА: «${t.title}»\n` +
+        (excerpt ? `Условие и формат этого задания (опирайся на него):\n${excerpt}\n\n` : '') +
+        (t.aiContext ? `Краткая методика решения:\n${t.aiContext}` : '');
+    }
+    return `### Методика по теме «${t.title}»\n${t.aiContext || t.description || ''}`;
+  });
+
+  const methodics = blocks.join('\n\n');
 
   const methodicsBlock = methodics
-    ? `${methodics}\n\n**Опирайся строго на методики выше. Не добавляй тем, которых там нет.**\n`
+    ? `${methodics}\n\n**Правила использования материалов выше:**\n` +
+      `- Отвечай строго по приведённым условиям и методикам, не выдумывай тем, которых здесь нет.\n` +
+      `- Если просят «разминку» / тренировочную задачу — придумывай её РОВНО в формате открытой темы (та же структура условия, те же типы данных), с конкретными числами/данными, как на реальном ЕГЭ. Сначала только условие, без решения.\n`
     : '';
 
   return `Ты — профессиональный репетитор по подготовке к ЕГЭ по информатике (Россия).
